@@ -89,15 +89,15 @@ app.initialize();
 
 var app = {
     sendSms: function() {
-        var number = '0726738023'; /* iOS: ensure number is actually a string */
-        var message = 'Hi Prince .how are you doing?';
+        var number = $('#phoneno').val();
+        var message = window.localStorage.getItem('remindermessage');
         console.log("number=" + number + ", message= " + message);
 
         //CONFIGURATION
         var options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
             android: {
-                intent: ''  // send SMS with the native android SMS messaging
+            intent: ''  // send SMS with the native android SMS messaging
             }
         };
 
@@ -1059,6 +1059,11 @@ function setpolicycode(policycode,mobile){
   localStorage.setItem("policymobile",mobile);
 }
 
+function setremindercode(policycode,mobile,message){
+  localStorage.setItem("shopitemcode",policycode);
+  localStorage.setItem("policymobile",mobile);
+  localStorage.setItem("remindermessage",message);
+}
 
 function setitemcode(sysitemcode){
 	localStorage.setItem("sysitemcode",sysitemcode);
@@ -1183,8 +1188,10 @@ myApp.onPageInit('reminders', function (page){
                   if(diff>=0&&diff<=7){xx='background:#f00';}
                   if(diff>7&&diff<=14){xx='background:#ff3';}
                   if(diff>14&&diff<=31){xx='background:#0f6';}
+
+                  var message='Hi '+array[i]['name']+'. Your Insurance Policy for Vehicle Regn No: '+array[i]['regn']+' expires on '+array[i]['end']+'.Kindly Renew the Policy.Regards,'+window.localStorage.getItem('comname');
                   
-                 $("#myUL").append("<li  onclick='setpolicycode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\")'><a style='"+xx+"'  href='newreminder.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"-"+array[i]['regn']+"<span class='spanprice'>"+array[i]['end']+"</span></a></li>");
+                 $("#myUL").append("<li  onclick='setremindercode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\",\""+message+"\")'><a style='"+xx+"'  href='newreminder.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"-"+array[i]['regn']+"<span class='spanprice'>"+array[i]['end']+"</span></a></li>");
 
                   
   }
@@ -1331,7 +1338,7 @@ myApp.onPageInit('newreminder', function (page) {
      var mobile = window.localStorage.getItem('policymobile');
      $('#callcus').attr('href', 'tel:'+mobile);
      $('#smscus').attr('href', 'sms:'+mobile);
-      $('#phoneno').val(mobile);
+     $('#phoneno').val(mobile);
 
 })
 
