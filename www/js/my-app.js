@@ -90,7 +90,7 @@ app.initialize();
 var app = {
     sendSms: function() {
         var number = $('#phoneno').val();
-        var message = window.localStorage.getItem('remindermessage');
+        var message = window.localStorage.getItem('remindermessage').toString();
         console.log("number=" + number + ", message= " + message);
 
         //CONFIGURATION
@@ -1190,7 +1190,7 @@ myApp.onPageInit('reminders', function (page){
                   if(diff>7&&diff<=14){xx='background:#ff3';}
                   if(diff>14&&diff<=31){xx='background:#0f6';}
 
-                  var message='Hi '+array[i]['name']+'. Your Insurance Policy for Vehicle Regn No: '+array[i]['regn']+' expires on '+array[i]['end']+'.Kindly Renew the Policy.Regards,'+window.localStorage.getItem('comname');
+                  var message='Hi '+array[i]['name']+'. Your Insurance Policy for Vehicle Regn No: '+array[i]['regn']+' expires on '+array[i]['end']+'.Kindly Renew the Policy.Regards,'+window.localStorage.getItem('comname')+'.';
                   
                  $("#myUL").append("<li  onclick='setremindercode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\",\""+message+"\")'><a style='"+xx+"'  href='newreminder.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"-"+array[i]['regn']+"<span class='spanprice'>"+array[i]['end']+"</span></a></li>");
 
@@ -1340,6 +1340,7 @@ myApp.onPageInit('newreminder', function (page) {
      $('#callcus').attr('href', 'tel:'+mobile);
      $('#smscus').attr('href', 'sms:'+mobile);
      $('#phoneno').val(mobile);
+
 
 })
 
