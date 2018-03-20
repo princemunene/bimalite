@@ -1,0 +1,248 @@
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript">
+ var username = window.localStorage.getItem('username');
+ var database = window.localStorage.getItem('database');
+ var version = '102';
+  if(username==0){
+    window.location.href = "index.html";
+  }
+ window.localStorage.removeItem("linearr");
+  window.onload = setupRefresh;
+  var timer=0;
+  function setupRefresh(){
+  timer=setInterval("auto_logout();",600000);
+  }
+  
+
+function reset_interval(){
+  if(timer!=0){
+    clearInterval(timer);
+    timer=0;
+    timer=setInterval("auto_logout();",600000);
+  }
+}
+function auto_logout(){
+  var b = $('#remote').val();
+   window.location.href = "index.html";
+}
+</script>
+<script type="text/javascript">    
+
+    $(document).ready(function(){
+      //check version
+
+        $.ajax({
+        url:'http://'+window.localStorage.getItem('server')+'/bridge.php?database='+database,
+        data:{id:22},
+        success:function(data){
+        $('#recdiv').html(data);
+
+        newversion=parseFloat(data,10);
+        currentversion=parseFloat(version,10);
+        if(newversion>currentversion){
+          window.open("http://www.qet.co.ke/BimaLite.apk");
+          swal({
+            title: "Update Available",
+            text: "An update for the app is available.Follow the link on the browser to update to the latest version",
+            timer: 5000,
+            showConfirmButton: false
+          });
+
+          //update database
+          $.ajax({
+          url:'http://'+window.localStorage.getItem('server')+'/update.php?database='+database,
+          data:{id:currentversion,newversion:newversion},
+          success:function(data){
+          }
+          });
+
+          setTimeout(function() {window.location.href = "index.html";}, 5000);
+
+         
+        }
+        
+        }
+        }); 
+
+
+        
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=3&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            console.log(result);
+            $.each(result, function(i, field) {
+              window.localStorage.setItem('comname',field.CompanyName);
+              window.localStorage.setItem('comtel',field.Tel);
+              window.localStorage.setItem('comadd',field.Address);
+              window.localStorage.setItem('comweb',field.Website);
+              window.localStorage.setItem('comemail',field.Email);
+              window.localStorage.setItem('comdesc',field.Description);
+              window.localStorage.setItem('comlogo',field.Logo);
+
+              
+            });
+        });
+
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=3.1&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            console.log(result);
+            $.each(result, function(i, field) {
+              window.localStorage.setItem('comname',field.comname);
+              window.localStorage.setItem('comtel',field.tel);
+              window.localStorage.setItem('comadd',field.address);
+              });
+        });
+
+        
+        
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=9&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+         window.localStorage.setItem("linearr", result);
+
+            //console.log(result);
+        });
+
+         var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=10&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+         window.localStorage.setItem("bararr", result);
+
+            //console.log(result);
+        });
+
+
+         var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=11&user="+username+"&database="+database;
+
+         $.getJSON(url, function(result) {
+
+         window.localStorage.setItem("dougnut", result);
+
+
+            //console.log(result);
+        });
+
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=14&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            console.log(result);
+            window.localStorage.setItem("dashdata", result);
+           
+        }); 
+
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=15&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            console.log(result);
+            window.localStorage.setItem("notifications", JSON.stringify(result));
+
+      
+        }); 
+
+        //items
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=4&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            localStorage.setItem("items", JSON.stringify(result));
+        });
+
+        //customers
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=23&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+            localStorage.setItem("customers", JSON.stringify(result));
+        });
+
+       });
+
+         //daily notifications
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=21&user="+username+"&database="+database;
+        $.getJSON(url, function(result) {
+           
+        });
+
+      //cart
+       var array = JSON.parse(localStorage.getItem("cart"));
+       var items = array.length-1;
+
+
+    </script>
+<html>
+<head>
+<meta charset="utf-8">
+
+
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+<title>BimaLite-Advanced Software, Made Simple</title>
+<link rel="stylesheet" href="css/framework7.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/blue.css">
+<link rel="stylesheet" href="css/jqueryui.css">
+<link rel="shortcut icon" href="images/favicon.png">
+<link type="text/css" rel="stylesheet" href="css/swipebox.css" />
+<link type="text/css" rel="stylesheet" href="css/animations.css" />
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
+<link href="css/sweetalert.css" rel="stylesheet" type="text/css">
+</head>
+<body id="mobile_wrap" onmousemove="reset_interval()" onclick="reset_interval()" onkeypress="reset_interval()" onscroll="reset_interval()">
+
+    <div class="statusbar-overlay"></div>
+
+    <div class="panel-overlay"></div>
+
+
+
+    <div class="views">
+
+      <div class="view view-main">
+
+        <div class="pages">
+
+          <div data-page="index" class="page homepage" >
+            <div class="page-content">
+          <div class="logo"><h1>BimaLite</h1><span><br/>Advanced Software, Made Simple</span>
+            <span id="credentials"><br/><br/>User:<script>document.write(username)</script> | Company:<script>document.write(window.localStorage.getItem('database'))</script></span></div>
+
+                <nav class="main-nav">
+
+                        <ul>
+                         
+                          <li id="rights106" style="display:none;background:#85af5d"><a href="policies.html"><img src="images/icons/white/car.png" alt="" title="" /><span>POLICIES</span></a></li>
+                          <li id="rights119" style="display:none;background:#f17225"><a href="certificates.html"><img src="images/icons/white/contact.png" alt="" title="" /><span>CERTIFICATES</span></a></li>
+                          <li id="rights108" style="display:none;background:#29aae3"><a href="reminders.html"><img src="images/icons/white/blog.png" alt="" title="" /><span>REMINDERS</span></a></li>
+                          <li id="rights106" style="display:none;background:#c53238"><a href="invoices.html"><img src="images/icons/white/cart.png" alt="" title="" /><span>INVOICES</span></a></li>
+                          <li id="rights155" style="display:none;background:#967adc"><a href="receipts.html"><img src="images/icons/white/electronics.png" alt="" title="" /><span>RECEIPTS</span></a></li>
+                          <li id="rights155" style="display:none;background:#ffb606;"><a href="dashboard.html"><img src="images/icons/white/rocket.png" alt="" title="" /><span>DASHBOARD</span></a></li>
+                          <li id="rights170" style="display:none;background:#E91E63"><a href="expenses.html"><img src="images/icons/white/food.png" alt="" title="" /><span>EXPENSES</span></a></li>
+                          <li id="rights117" style="display:none;"><a href="bank.html"><img src="images/icons/white/briefcase.png" alt="" title="" /><span>BANK</span></a></li>
+                          <li id="rights155" style="display:none;background:#f87c68"><a href="reports.html"><img src="images/icons/white/form.png" alt="" title="" /><span>REPORTS</span></a></li>
+                          <li  id="rights901" style="display:none;background:#06a78b"><a href="settings.html"><img src="images/icons/white/settings.png" alt="" title="" /><span>SETTINGS</span></a></li>
+                          <li id="rights902" style="display:none;background:#795548"><a href="about.html"><img src="images/icons/white/favorites.png" alt="" title="" /><span>ABOUT US</span></a></li>
+                          <li  id="rights903" style="display:none;background:#272625"><a href="#" onclick="logout()"><img src="images/icons/white/logout.png" alt="" title="" /><span>LOGOUT</span></a></li>
+                          </ul>
+                      </nav> 
+                     
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+   
+    
+
+
+  </body>
+</html>
+
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/framework7.js"></script>
+<script type="text/javascript" src="js/my-app.js"></script>
+<script type="text/javascript" src="js/jquery.swipebox.js"></script>
+<script type="text/javascript" src="js/sweetalert.js"></script>
+<script type="text/javascript" src="js/canvas.js"></script>
+<script type="text/javascript"> window.location.hash="#index";</script>
+

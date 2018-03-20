@@ -1,0 +1,71 @@
+<div class="pages">
+  <div data-page="shopitem" class="page no-toolbar no-navbar">
+    <div class="page-content">
+    
+     <div class="navbarpages">
+       <div class="navbar_left"  id="backtoshop"><a href="listshop.html"><img src="images/icons/blue/back.png" alt="" title="" /></a></div>
+       <div class="navbar_center"><h2><a href="main.html">EazzyPos</a></h2></div>
+       <div class="navbar_right"><a href="main.html"><img src="images/icons/blue/menu.png" alt="" title="" /></a></div>
+       
+     </div>
+     
+     <div id="pages_maincontent">  
+      
+       <div class="shop_header_title">
+          <h2>ITEM DESCRIPTION</h2>
+          <a href="cart.html">VIEW CART <span id="cartitemsno2" style="font-weight:bold;color:#c53238"> </span></a>
+          </div>
+      
+      <div class="page_content">
+      
+      <div class="shop_item">
+
+          <div class="shop_thumb" style="display:none">
+          <a rel="gallery-3" href="#" title="Item" id="itempic"></a>
+          <div id="pricetag" class="shop_item_price"></div>
+          </div>
+          <div class="shop_item_details">
+          <h4>PRODUCT DETAILS</h4>
+          <p>CODE: <strong id="itemcode"></strong></p>
+          <p>NAME: <strong id="itemname"></strong></p>
+          <p>CATEGORY: <strong id="itemcateg"></strong></p>
+          <p>TYPE: <strong id="itemtype"></strong></p>
+          <p>STOCK BALANCE: <strong id="itembal"></strong></p>
+          
+            <div class="item_qnty_shopitem" >
+              <h4>QUANTITY</h4>
+                <form id="myform" method="POST" action="#">
+                    <input type="button" value="-" class="qntyminusshop" field="quantity"  onclick="calcitemtot()" />
+                    <input type="number" name="quantity" id="quantity" value="1" class="qntyshop"  style=""  onclick="setCursor('quantity')"  onkeyup="calcitemtot()"/>
+                    <input type="button" value="+" class="qntyplusshop" field="quantity"  onclick="calcitemtot()" />
+                </form>
+            </div>
+           
+            <div class="item_qnty_shopitem">
+               <h4>PRICE</h4>
+                <form id="myform" method="POST" action="#">
+                    <input type="number" id="price" name="price" value="1" class="qntyshop"  style="" onclick="setCursor('price')"  onkeyup="calcitemtot()"/>
+                    </form>
+            </div>
+         <h4>TOTAL</h4>
+            <div class="item_qnty_shopitem">
+                <input type="text" id="total" name="total" value="1" class="qntyshop" disabled style="border:1px solid #f00;width:60%"/>
+                 </div>
+              <a href="#" data-panel="left" id="addtocart" class="open-panel" onclick="addtocart()">ADD TO CART</a>
+              <div id="recdiv" style="float:right;width:40px"></div>
+          </div>
+
+          
+      </div>
+      
+      
+      
+      </div>
+      
+      </div>
+      
+      
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/my-app.js"></script>

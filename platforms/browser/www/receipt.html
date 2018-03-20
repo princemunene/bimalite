@@ -1,0 +1,164 @@
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/my-app.js"></script>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="images/apple-touch-startup-image-640x1096.png">
+<title>EazzyPos-Smart Point of Sale at Hand</title>
+<link rel="stylesheet" href="css/framework7.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/blue.css">
+<link rel="stylesheet" href="css/jqueryui.css">
+<link rel="shortcut icon" href="images/favicon.png">
+<link type="text/css" rel="stylesheet" href="css/swipebox.css" />
+<link type="text/css" rel="stylesheet" href="css/animations.css" />
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
+<link href="css/sweetalert.css" rel="stylesheet" type="text/css">
+</head>
+<body style="background:#fff;overflow:auto">
+
+  <script type="text/javascript"> 
+   function formatstring(text,num){
+        len=text.length;
+        if(len>num){
+         text=text.substr(0, num);
+        }else{
+          diff=(num-len)*1.7;
+          for (var i=0;i<diff;i++){
+
+            text=text+'&nbsp;';
+
+          }
+
+        }
+
+        text=text+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        return text;
+    }
+    function formatstring2(text,num){
+        len=text.length;
+        if(len>num){
+         text=text.substr(0, num);
+        }else{
+          diff=(num-len)*1.7;
+          for (var i=0;i<diff;i++){
+
+            text=text+' ';
+
+          }
+
+        }
+
+        text=text+'   ';
+        return text;
+    }
+
+    tot=0;
+    var array=JSON.parse(window.localStorage.getItem('receiptdata'));
+    
+    for (var i=0;i<1;i++){
+      type=array[i]['SaleMode'];if(type=='cash'){doctype='RECEIPT';rcptno=array[i]['RcptNo'];}else{doctype='INVOICE';rcptno=array[i]['InvNo'];}
+      date=array[i]['Date'];var parts=date.split('/',3);date=parts[2]+'/'+parts[1]+'/'+parts[0]
+      client=array[i]['ClientName'];
+      tendered=array[i]['AmountPaid'].replace(/[&\/\\#,+()$~%'":*?<>{}]/g,'');tendered=parseFloat(tendered,10);
+      change=array[i]['Change'].replace(/[&\/\\#,+()$~%'":*?<>{}]/g,'');change=parseFloat(change,10);
+      cashier=array[i]['Cashier'];
+     }
+
+    
+    
+        
+  </script>
+    <div class="views">
+
+      <div class="view">
+
+         <div class="pages">
+            <div  class="page no-toolbar no-navbar">
+              <div class="page-content">
+              
+               <div class="navbarpages">
+                 <div class="navbar_left"><a href="main.html"><img src="images/icons/blue/menu.png" alt="" title="" /></a></div>
+                 <div class="navbar_center"><h2><a href="main.html">EazzyPos</a></h2></div>
+                 
+               </div>
+               
+               <div id="pages_maincontent">
+                <h2 class="page_title">RECEIPT/INVOICE PRINT OUT</h2>
+                               
+                               <div class="page_content">
+                               
+                               <div class="contactform" tabindex="0">
+       
+         
+
+         <div style="width:300px;min-height:200px; border:0px solid #333;font-size:11px; font-weight:normal;" id="selectable" >
+          <p style="text-align:center; font-weight:normal; margin:0 0 0 0px"><script>document.write(window.localStorage.getItem('comname'))</script></p>
+          <div style="clear:both;"></div>
+          <p style="text-align:center;   font-weight:normal; margin:0 0 0 0px; ">P.O Box <script>document.write(window.localStorage.getItem('comadd'))</script><br/>Tel: <script>document.write(window.localStorage.getItem('comtel'))</script></p><div style="clear:both"></div>
+          <div style="clear:both;border-bottom:1px dashed #333;margin-bottom:5px"></div>
+          <p style="text-align:center;   font-weight:normal; margin:0 0 0 0px;padding-bottom:0"><script>document.write(doctype)</script></p>
+          <div style="clear:both;border-bottom:1px dashed #333;margin-bottom:5px"></div>
+
+           <p style="text-align:left;   font-weight:normal; margin:0 0 0 10px; "><script>document.write(doctype)</script> No: <b><script>document.write(rcptno)</script></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: <b><script>document.write(date)</script></b><br/>
+            <script>if(client!=''){document.write('Client: <b>'+client+'</b>')}</script></p>
+
+           <div style="clear:both;border-bottom:1px dashed #333;margin-bottom:0px"></div>
+           <p style="font-weight:bold; margin:0 0 0 0px;padding-bottom:0"><script>document.write(formatstring('Item Name',30)+formatstring('Qty',5)+'Total')</script></p>
+           <div style="clear:both;border-bottom:1px dashed #333;margin-bottom:5px"></div>
+            <p style="font-weight:normal; margin:0 0 0 0px;padding-bottom:0"><script>
+            tot=0;rows='';rows2='';
+            for (var i=0;i<array.length;i++){
+            row=formatstring(array[i]['ItemName'],30)+formatstring(array[i]['Qty'],5)+array[i]['TotalPrice'];
+            rows=rows+row+"\n";
+
+            rowm=formatstring2(array[i]['ItemName'],10)+formatstring2(array[i]['Qty'],3)+array[i]['TotalPrice'];
+            rows2=rows2+rowm+"\n";
+
+            document.write(row+'<br/>')
+            amount=array[i]['TotalPrice'];amount=amount.replace(/[&\/\\#,+()$~%'":*?<>{}]/g,'');
+            tot=parseFloat(tot,10)+parseFloat(amount,10);
+            } 
+            </script></p>
+            <div style="clear:both;border-bottom:1px dashed #333;margin-bottom:0px"></div>
+             <p style="font-weight:bold; margin:0 0 0 0px;padding-bottom:0"><script>document.write(formatstring('Total',37)+tot.formatMoney(2, '.', ','))</script></p>
+             <p style="font-weight:bold; margin:0 0 0 0px;padding-bottom:0"><script>document.write(formatstring('Amount Tendered',35)+tendered.formatMoney(2, '.', ','))</script></p>
+             <p style="font-weight:bold; margin:0 0 0 0px;padding-bottom:0"><script>document.write(formatstring('Change',36)+change.formatMoney(2, '.', ','))</script></p>
+           <div style="clear:both;border-bottom:1px dashed #333;margin-top:0px;margin-bottom:5px"></div>
+
+
+          <p style="text-align:center; font-weight:normal; margin:0 0 0 0px;">You have been Served By: <b><script>document.write(cashier)</script></b><br/>System Developers: QET SYSTEMS</p>
+          
+          <script> var text=window.localStorage.getItem('comname') +"\n" + window.localStorage.getItem('comadd') +"\nTel: " + window.localStorage.getItem('comtel') +"\n................................\n\n"+doctype+"\n"+doctype+" No: " + rcptno +"\nDate: " + date +"\nClient Name: "+ client + "\n................................\n"+ formatstring2('Item Name',10)+formatstring2('Qty',3)+'Total' + "\n................................\n" + rows2 + "\n................................\n"+ formatstring2('Total',12)+tot.formatMoney(2, '.', ',')  + "\n" + formatstring2('Amount Tendered',16)+tendered.formatMoney(2, '.', ',') + "\n" + formatstring2('Change',12)+change.formatMoney(2, '.', ',')+"\n\n................................\n\nYou have been Served By: " + cashier +"\n\nSystem Developers: QET SYSTEMS\n\n\n\n\n\n";
+          </script>
+         
+            <input type="button" name="submit" class="form_submit" id="submit" style="" value="PRINT RECEIPT" onclick="printreceipt(text)"/>
+        
+          </div>
+                                    </div>
+                     
+                     
+                     </div>
+
+                      </div>     
+                
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+    
+   
+    
+
+
+  </body>
+</html>
+

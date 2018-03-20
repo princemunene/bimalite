@@ -1,0 +1,81 @@
+ <div class="pages">
+  <div data-page="edititem" class="page no-toolbar no-navbar">
+    <div class="page-content">
+    
+     <div class="navbarpages">
+       <div class="navbar_left"  id="backtoitems"><a href="items.html"><img src="images/icons/blue/back.png" alt="" title="" /></a></div>
+       <div class="navbar_center"><h2><a href="main.html">EazzyPos</a></h2></div>
+       <div class="navbar_right"><a href="main.html"><img src="images/icons/blue/menu.png" alt="" title="" /></a></div>
+       
+     </div>
+     
+     <div id="pages_maincontent">
+       <div class="shop_header_title">
+          <h2>UPDATE ITEM DETAILS</h2>
+          </div>
+                     
+                     <div class="page_content">
+
+                       <div class="contactform" tabindex="0">
+                        <div class="form_row">
+                         <input type="text" value="NAME" disabled class="form_input"  style="float:left;width:30%;color:#333;margin-left:0;padding-left:0" />
+                         <input type="text" id="itemname"  value="" class="form_input" style="float:right;width:60%;color:#333;padding-left:0" />
+                         <input type="hidden" id="itemcode"/>
+                        </div>
+
+                         <div class="form_row">
+                         <input type="text" value="TYPE" disabled class="form_input"  style="float:left;width:30%;color:#333;margin-left:0;padding-left:0" />
+                         <select onchange="displaygoodiv()" id="type" class="form_select"  style="float:right;width:60%;color:#333;padding-left:0" >
+                          <option value="GOOD">GOOD</option>
+                          <option value="SERVICE">SERVICE</option>
+                          </select>
+
+                          </div>
+
+                         <div class="form_row goodiv">
+                         <input type="text" value="BUYING PRICE" disabled class="form_input"  style="float:left;width:50%;color:#333;margin-left:0;padding-left:0" />
+                         <input type="number" id="purchprice"  value="" class="form_input" style="float:right;width:40%;text-transform:uppercase;padding:10px;font-size:12px;color:#333" />
+                         </div>
+
+                          <div class="form_row goodiv">
+                         <input type="text" value="MIN BAL" disabled class="form_input"  style="float:left;width:50%;color:#333;margin-left:0;padding-left:0" />
+                         <input type="number" id="minbal"  value="" class="form_input" style="float:right;width:40%;text-transform:uppercase;padding:10px;font-size:12px;color:#333" />
+                         </div>
+
+
+                         <div class="form_row">
+                         <input type="text" value="SELLING PRICE" disabled class="form_input"  style="float:left;width:50%;color:#333;margin-left:0;padding-left:0" />
+                         <input type="number" id="saleprice"  value="" class="form_input datepicker" style="float:right;width:40%;text-transform:uppercase;padding:10px;font-size:12px;color:#333" />
+                         </div>
+
+                        <form id="uploadphoto" method="post" action="" enctype="multipart/form-data" target="leiframe">
+                        <dd class="custuploadblock_js">
+                       <input style="opacity:0; float:left;" name="image" id="photoupload"  
+                        class="transfileform_js" type="file">
+                        </dd>
+                       <div id="leipic"></div>
+                        <input type="hidden" id="stamp" name="stamp" value="0"/>
+                        <input type="hidden" id="id" name="id"  value="1"/>
+                        <div style="clear:both;marhin-top:20px"></div>
+                        <input type="submit" value="UPLOAD" id="send"  
+                        style="width:50%;float:right; cursor:pointer"class="form_submit"/>
+                          <div style="clear:both;marhin-top:20px"></div>
+                        </form>
+
+
+                        <input type="button" name="submit" class="form_submit" id="submit" style="width:45%" value="UPDATE ITEM" onclick="edititem()"/>
+                        <input type="button" name="submit" class="form_submit" id="submit" style="width:45%;background:#c53238" value="DELETE ITEM" onclick="deleteitem()"/>
+                        <div id="recdiv" style="float:right;width:40px"></div>
+
+
+                        </div>
+                     
+                     
+                       
+
+                      </div>     
+      
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/my-app.js"></script>
