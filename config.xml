@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.qet.eazzypos" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>EazzyPos  Gen</name>
+    <name>BimaLite</name>
     <description>
-        A Retail Point of Sale Application.
+        BimaLite-Advanced Software, Made Simple.
     </description>
     <author email="info@qet.co.ke" href="http://cordova.io">
         QET SYSTEMS LTD
