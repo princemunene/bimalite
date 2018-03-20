@@ -260,6 +260,7 @@ function pickusbprinter(){
  * @param {Function} callback
  *      A callback function
  */
+
 cordova.plugins.printer.pick(function (uri) {
     alert(uri ? uri : 'Canceled');
 });
