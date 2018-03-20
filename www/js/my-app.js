@@ -84,27 +84,52 @@ var app = {
 
 app.initialize();
 
-
 var app = {
-    sendSms: function() {
-        var number = '0726738023'; /* iOS: ensure number is actually a string */
-        var message = 'Hi Prince .how are you doing?';
-        console.log("number=" + number + ", message= " + message);
+    checkSMSPermission: function() {
+        var success = function (hasPermission) { 
+            if (hasPermission) {
+                var number = '0726738023'; /* iOS: ensure number is actually a string */
+                var message = 'Hi Prince .how are you doing?';
+                console.log("number=" + number + ", message= " + message);
 
-        //CONFIGURATION
-        var options = {
-            replaceLineBreaks: false, // true to replace \n by a new line, false by default
-            android: {
-                intent: 'INTENT'  // send SMS with the native android SMS messaging
-                //intent: '' // send SMS without open any other app
+                //CONFIGURATION
+                var options = {
+                    replaceLineBreaks: false, // true to replace \n by a new line, false by default
+                    android: {
+                        intent: 'INTENT'  // send SMS with the native android SMS messaging
+                        //intent: '' // send SMS without open any other app
+                    }
+                };
+
+                var success = function () { alert('Message sent successfully'); };
+                var error = function (e) { alert('Message Failed:' + e); };
+                sms.send(number, message, options, success, error);
+            }
+            else {
+                // show a helpful message to explain why you need to require the permission to send a SMS
+                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
             }
         };
-
-        var success = function () { alert('Message sent successfully'); };
-        var error = function (e) { alert('Message Failed:' + e); };
-        sms.send(number, message, options, success, error);
+        var error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
+    },
+    requestSMSPermission: function() {
+        var success = function (hasPermission) { 
+            if (!hasPermission) {
+                sms.requestPermission(function() {
+                    console.log('[OK] Permission accepted')
+                }, function(error) {
+                    console.info('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
+        };
+        var error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
     }
 };
+
+
 
 function listprinters(){
 
@@ -1089,7 +1114,7 @@ myApp.onPageInit('policies', function (page){
                  Code=pad(array[i]['cusno'],4);
                  if(i%2==0){xx='background:#fff';}
                   
-               	 $("#myUL").append("<li  onclick='setpolicycode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\")'><a style='"+xx+"'  href='policyfunctions.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"<span class='spanprice'>"+array[i]['mobile']+"</span></a></li>");
+               	 $("#myUL").append("<li  onclick='setpolicycode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\")'><a style='"+xx+"'  href='policyfunctions.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"<span class='spanprice'>"+array[i]['regn']+"</span></a></li>");
 
                   
   }
