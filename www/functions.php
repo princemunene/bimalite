@@ -1,8 +1,7 @@
 <?php 
 function db_fns($branch){
-    //$database='qetcoke_'.strtolower($branch);
     //$database='qetcoke_gensystem';
-    $database=strtolower($branch);
+    $database='qetcoke_'.strtolower($branch);
     $db = mysql_connect('localhost', 'root', 'admin@123+',true) or die(mysql_error());
     //$db = mysql_connect('localhost', 'qetcoke_qet', 'qet@123+',true) or die(mysql_error());
     mysql_select_db($database,$db);
