@@ -60,6 +60,34 @@ foreach ($filters as $key => $val) {
 $mil = 1511849360657;
 
 */
+include "functions.php";
+$database='bimalite';
+db_fns($database);
+
+ $todexpenses=0;$todexpmon=0;
+                  $result =mysql_query("select * from ledgers where type='Expense' 0order by name");
+                  $num_results = mysql_num_rows($result); 
+                  for ($i=0; $i <$num_results; $i++) {
+                    $row=mysql_fetch_array($result);
+                    $lid=stripslashes($row['ledgerid']);
+
+                    $resulta =mysql_query("select SUM(debit) as dr, SUM(credit) as cr from ledgerbalances where ledgerid = '".$lid."' and stamp='".date('Ymd')."'" );
+                    $rowa=mysql_fetch_array($resulta);
+                    $cr1=stripslashes($rowa['cr']);
+                    $dr1=stripslashes($rowa['dr']);
+                    $bal=$dr1-$cr1;
+                    $todexpenses+=$bal;
+
+                    $resulta =mysql_query("select SUM(debit) as dr, SUM(credit) as cr from ledgerbalances where ledgerid = '".$lid."' and stamp>='".date('Ym')."01' and stamp<='".date('Ym')."31'" );
+                    $rowa=mysql_fetch_array($resulta);
+                    $cr1=stripslashes($rowa['cr']);
+                    $dr1=stripslashes($rowa['dr']);
+                    $bal=$dr1-$cr1;
+                    $todexpmon+=$bal;
+
+                  }
+
+                  echo $todexpmon;
 
 ?>
 <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
@@ -71,30 +99,5 @@ $mil = 1511849360657;
 <script type="text/javascript" src="js/email.js"></script>
 <script type="text/javascript" src="js/sweetalert.js"></script>
 
-        <script>
-    function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [day, month, year].join('/');
-}
-
-                var d = new Date();
-                  month = '' + (d.getMonth() + 1),
-                    day = '' + d.getDate(),
-                    year = d.getFullYear();
-
-                if (month.length < 2) month = '0' + month;
-                if (day.length < 2) day = '0' + day;
-                today=[year, month, day].join('');
-                 alert(today)
-                
-
-
-       </script>
+ 
 

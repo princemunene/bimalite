@@ -726,6 +726,9 @@ $result = mysql_query("update customers set name='".$_GET['names']."',idno='".$_
 }
 
 
+
+
+
 if($result){
 $resulta = mysql_query("insert into log values('0','".$username." alters Policy database.Code:".$cusno."','".$username."','".date('YmdHi')."','".date('H:i')."','".date('d/m/Y')."','1')");   
 echo '<script>swal("Success!", "Policy Info Updated!", "success");</script>';
@@ -796,6 +799,133 @@ echo '<script>swal("Success!", "Customer Deleted!", "success");</script>';
 }
 else {
 echo '<script>swal("Error", "Customer not Deleted!", "error");</script>';
+}
+
+break;
+
+case 21:
+
+$username=$_GET['user'];
+$a=$_GET['a'];
+$cusno=$_GET['cusno'];
+$amount=$_GET['amount'];
+$description=$_GET['description'];
+
+$question =mysql_query("SELECT * FROM receipts where drcr='dr' order by serial desc limit 0,1");
+$ans=mysql_fetch_array($question);
+$rcptno=stripslashes($ans['rcptno'])+1;
+
+
+$resultx =mysql_query("select * from customers where cusno='".$cusno."' limit 0,1");
+$rowx=mysql_fetch_array($resultx);
+$nbal=stripslashes($rowx['bal'])+$amount;
+
+
+$resulty =mysql_query("select * from inscompanies where name='".stripslashes($rowx['currentins'])."' limit 0,1");
+$rowy=mysql_fetch_array($resulty);
+
+$comm=round((stripslashes($rowy['commision'])*$amount/100),2);
+
+$resulta = mysql_query("insert into receipts values('0','".$rcptno."','".date('Y/m/d')."','".stripslashes($rowx['regn'])."','".stripslashes($rowx['name'])."','".stripslashes($rowx['policyno'])."','".stripslashes($rowx['currentins'])."','".stripslashes($rowx['ctype'])."','','".$amount."','','".$description."','','','','".$nbal."','".$comm."','".$nbal."','".date('Ymd')."','dr',1)");
+$resultb = mysql_query("update customers set bal='".$nbal."' where cusno='".$cusno."'");
+
+postjournal(0,635,'Credit','Add',628,'Debit','Add',$amount,'Invoice Posting-'.stripslashes($rowx['name']).'-Invoice No:'.$rcptno.'',$rcptno,date('Y/m/d'),$username,$userbranch);
+
+
+if($resulta){
+$resulta = mysql_query("insert into log values('0','".$username." posts client invoice.invoice no:".$rcptno."','".$username."','".date('YmdHi')."','".date('H:i')."','".date('d/m/Y')."','1')");   
+echo '<script>swal("Success!", "Invoice Posted!", "success");</script>';
+}
+else {
+echo '<script>swal("Error", "Invoice not Posted!", "error");</script>';
+}
+
+break;
+
+
+case 22:
+
+$username=$_GET['user'];
+$a=$_GET['a'];
+$cusno=$_GET['cusno'];
+$amount=$_GET['amount'];
+$description=$_GET['description'];
+$ledger=$_GET['ledger'];
+
+$question =mysql_query("SELECT * FROM receipts where drcr='cr' order by serial desc limit 0,1");
+$ans=mysql_fetch_array($question);
+$rcptno=stripslashes($ans['rcptno'])+1;
+
+
+$resultg = mysql_query("select * from ledgers where ledgerid='".$ledger."'");
+$rowg=mysql_fetch_array($resultg);
+$lname=stripslashes($rowg['name']);
+
+
+$resultx =mysql_query("select * from customers where cusno='".$cusno."' limit 0,1");
+$rowx=mysql_fetch_array($resultx);
+$nbal=stripslashes($rowx['bal'])-$amount;
+
+
+$resulta = mysql_query("insert into receipts values('0','".$rcptno."','".date('Y/m/d')."','".stripslashes($rowx['regn'])."','".stripslashes($rowx['name'])."','".stripslashes($rowx['policyno'])."','".stripslashes($rowx['currentins'])."','".stripslashes($rowx['ctype'])."','','".$amount."','".$lname."','".$description."','','','','".$nbal."','','".$nbal."','".date('Ymd')."','cr',1)");
+$resultb = mysql_query("update customers set bal='".$nbal."' where cusno='".$cusno."'");
+
+postjournal(0,628,'Credit','Add',$ledger,'Debit','Add',$amount,'Receipt Posting-'.stripslashes($rowx['name']).'-Receipt No:'.$rcptno.'',$rcptno,date('Y/m/d'),$username,$userbranch);
+
+
+if($resulta){
+$resulta = mysql_query("insert into log values('0','".$username." posts client Receipt.Receipt no:".$rcptno."','".$username."','".date('YmdHi')."','".date('H:i')."','".date('d/m/Y')."','1')");   
+echo '<script>swal("Success!", "Receipt Posted!", "success");</script>';
+}
+else {
+echo '<script>swal("Error", "Receipt not Posted!", "error");</script>';
+}
+
+break;
+
+
+case 23:
+                            
+
+$a=$_GET['a'];
+$username=$_GET['username'];
+$insid=$_GET['insid'];
+
+if($a==1){
+
+	$result = mysql_query("INSERT INTO inscompanies (id, name, mobile, email, status, commision) VALUES ('0','".$_GET['insname']."','".$_GET['insphone']."','".$_GET['insemail']."','1','".$_GET['inscomm']."')")  or die (mysql_error());
+
+}
+
+if($a==2){
+
+	$result = mysql_query("update inscompanies set name='".$_GET['insname']."',mobile='".$_GET['insphone']."',email='".$_GET['insemail']."',commision='".$_GET['inscomm']."' where id='".$insid."'");
+
+}
+
+if($result){
+$resulta = mysql_query("insert into log values('0','".$username."  updates insurance companies data.Ins Id:".$insid."','".$username."','".date('YmdHi')."','".date('H:i')."','".date('d/m/Y')."','1')");   
+echo '<script>swal("Success!", "Details updated!", "success");</script>';
+}
+else {
+echo '<script>swal("Error", "Details not updated!", "error");</script>';
+}
+
+break;
+
+
+case 24:
+
+$username=$_GET['user'];
+$insid=$_GET['insid'];
+$result = mysql_query("DELETE from inscompanies where id='".$insid."'");
+
+if($result){
+$resulta = mysql_query("insert into log values('0','".$username." deletes Insurance Company.Insurance:".$insid."','".$username."','".date('YmdHi')."','".date('H:i')."','".date('d/m/Y')."','1')");   
+echo '<script>swal("Success!", "Company Deleted!", "success");</script>';
+}
+else {
+echo '<script>swal("Error", "Company not Deleted!", "error");</script>';
 }
 
 break;

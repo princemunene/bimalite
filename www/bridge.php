@@ -121,28 +121,26 @@ while ($row=mysql_fetch_array($result)){
 echo json_encode($data);
 break;
 
-
-
 case 9:
 
 //dashboard figures
-		    //line
+        //line
         $seslinear='';
         $pre=array();
-        $result =mysql_query("select * from sales where  Bname='".$userbranch."' order by TransNo desc limit 0,3000");
+        $result =mysql_query("select * from receipts where  drcr='dr' order by serial desc limit 0,3000");
         $num_results = mysql_num_rows($result);
         for ($i=0; $i <$num_results; $i++) {
           $row=mysql_fetch_array($result);
-          $pre[]=stripslashes($row['Date']);
+          $pre[]=stripslashes($row['date']);
         }
         $pre = array_unique($pre);$pre=array_slice($pre,0,10); $pre=array_reverse($pre);
         foreach ($pre as $key => $val) {
-        $result =mysql_query("select * from sales where Date='".$val."' and Bname='".$userbranch."' and Type='Sale'");
+        $result =mysql_query("select * from receipts where date='".$val."' and drcr='dr'");
         $num_results = mysql_num_rows($result);
         $tot=0;
           for ($i=0; $i <$num_results; $i++) {
                   $row=mysql_fetch_array($result);
-                $tot+=stripslashes($row['TotalPrice']);
+                $tot+=stripslashes($row['amount']);
           }
           $date=dateprint($val);
           $tot=round($tot);
@@ -160,6 +158,8 @@ case 9:
 
       
   break;
+
+
 
 
   case 10:
@@ -303,7 +303,6 @@ $row=mysql_fetch_array($result);
  $('#pinno').val('".stripslashes($row['pinno'])."');
  $('#regn').val('".stripslashes($row['regn'])."');
  $('#make').val('".stripslashes($row['make'])."');
-
   $('#body').val('".stripslashes($row['tbody'])."');
  $('#vehiclevalue').val('".stripslashes($row['vehic'])."');
  $('#year').val('".stripslashes($row['myear'])."');
@@ -311,6 +310,7 @@ $row=mysql_fetch_array($result);
  $('#instype').val('".stripslashes($row['ctype'])."');
  $('#inscom').val('".stripslashes($row['currentins'])."');
  $('#policyno').val('".stripslashes($row['policyno'])."');
+ $('#bal').val('".stripslashes($row['bal'])."');
  </script>";
 
 
@@ -330,18 +330,23 @@ break;
 
 
 case 14:
-
-
-                 $todsales=0;
-                 $resulta =mysql_query("select SUM(TotalPrice) as amount from sales where Stamp='".date('Ymd')."' and Status!=0 and Type='Sale' and Bname='".$userbranch."'");
+ $moninvoices=0;
+                 $resulta =mysql_query("select SUM(amount) as amount from receipts where stamp>='".date('Ym')."01' and stamp<='".date('Ym')."31' and drcr='dr'");
                  $rowa=mysql_fetch_array($resulta);
-                 $todsales+=stripslashes($rowa['amount']);
-
-
-                 $todsalesmon=0;
-                 $resulta =mysql_query("select SUM(TotalPrice) as amount from sales where Stamp>='".date('Ym')."01' and Stamp<='".date('Ym')."31' and Status!=0 and Type='Sale' and Bname='".$userbranch."'");
+                 $moninvoices+=stripslashes($rowa['amount']);
+                 
+                 $moncomm=0;
+                 $resulta =mysql_query("select SUM(agentcom) as amount from receipts where stamp>='".date('Ym')."01' and stamp<='".date('Ym')."31' and drcr='dr'");
                  $rowa=mysql_fetch_array($resulta);
-                 $todsalesmon+=stripslashes($rowa['amount']);
+                 $moncomm+=stripslashes($rowa['amount']);
+
+
+
+
+                 $monreceipts=0;
+                 $resulta =mysql_query("select SUM(amount) as amount from receipts where stamp>='".date('Ym')."01' and stamp<='".date('Ym')."31' and drcr='cr'");
+                 $rowa=mysql_fetch_array($resulta);
+                 $monreceipts+=stripslashes($rowa['amount']);
 
                  $todexpenses=0;$todexpmon=0;
                   $result =mysql_query("select * from ledgers where type='Expense' and ledgerid!=644 and ledgerid!=651 order by name");
@@ -350,14 +355,14 @@ case 14:
                     $row=mysql_fetch_array($result);
                     $lid=stripslashes($row['ledgerid']);
 
-                    $resulta =mysql_query("select SUM(debit_".$userbranch.") as dr, SUM(credit_".$userbranch.") as cr from ledgerbalances where ledgerid = '".$lid."' and stamp='".date('Ymd')."'" );
+                    $resulta =mysql_query("select SUM(debit) as dr, SUM(credit) as cr from ledgerbalances where ledgerid = '".$lid."' and stamp='".date('Ymd')."'" );
                     $rowa=mysql_fetch_array($resulta);
                     $cr1=stripslashes($rowa['cr']);
                     $dr1=stripslashes($rowa['dr']);
                     $bal=$dr1-$cr1;
                     $todexpenses+=$bal;
 
-                    $resulta =mysql_query("select SUM(debit_".$userbranch.") as dr, SUM(credit_".$userbranch.") as cr from ledgerbalances where ledgerid = '".$lid."' and stamp>='".date('Ym')."01'and stamp<='".date('Ym')."31'" );
+                    $resulta =mysql_query("select SUM(debit) as dr, SUM(credit) as cr from ledgerbalances where ledgerid = '".$lid."' and stamp>='".date('Ym')."01' and stamp<='".date('Ym')."31'" );
                     $rowa=mysql_fetch_array($resulta);
                     $cr1=stripslashes($rowa['cr']);
                     $dr1=stripslashes($rowa['dr']);
@@ -367,27 +372,20 @@ case 14:
                   }
 
                   $cashinhand=0;
-                  $resulta =mysql_query("select SUM(debit_".$userbranch.") as dr, SUM(credit_".$userbranch.") as cr from ledgerbalances where ledgerid = '625'" );
+                  $resulta =mysql_query("select SUM(debit) as dr, SUM(credit) as cr from ledgerbalances where ledgerid = '625'" );
                   $rowa=mysql_fetch_array($resulta);
                   $cr1=stripslashes($rowa['cr']);
                   $dr1=stripslashes($rowa['dr']);
                   $cashinhand=$dr1-$cr1;
 
-                  $inventory=0;
-                  $result =mysql_query("select * from items where Type='GOOD'");
-                  $num_results = mysql_num_rows($result); 
-                  for ($i=0; $i <$num_results; $i++) {
-                    $row=mysql_fetch_array($result);
-                    $value=stripslashes($row['PurchPrice'])*stripslashes($row[$userbranch]);
-                    $inventory+=$value;
-
-                  }
+                  $profit=$moninvoices-$todexpmon;
+                  
                  
 
                  
 
 
-                  $data=number_format($todsales, 2, ".", "," ).'#'.number_format($todexpenses, 2, ".", "," ).'#'.number_format($todsalesmon, 2, ".", "," ).'#'.number_format($todexpmon, 2, ".", "," ).'#'.number_format($cashinhand, 2, ".", "," ).'#'.number_format($inventory, 2, ".", "," );
+                  $data=number_format($moninvoices, 2, ".", "," ).'#'.number_format($monreceipts, 2, ".", "," ).'#'.number_format($moncomm, 2, ".", "," ).'#'.number_format($todexpmon, 2, ".", "," ).'#'.number_format($cashinhand, 2, ".", "," ).'#'.number_format($profit, 2, ".", "," );
 
                   echo json_encode($data);
 
@@ -454,33 +452,6 @@ break;
 
 case 21:
 $username=$_GET['user'];   
-//minimum balance
-$result =mysql_query("select * from items where Type='GOOD'");
-$num_results = mysql_num_rows($result); 
-for ($i=0; $i <$num_results; $i++) {
-$row=mysql_fetch_array($result); 
-$bal=stripslashes($row[$userbranch]);
-$minbal=stripslashes($row['MinBal']);
-if($minbal>$bal){
-  
-$resultc =mysql_query("select * from messages where message='The item ".stripslashes($row['ItemName'])." is below the minimum stock balance. It is advised you stock the item.' order by id desc limit 0,1000");  
-$num_resultsc = mysql_num_rows($resultc); 
-
-
-  if($num_resultsc==0){ 
-
-              $resulta =mysql_query("select * from users order by name");
-              $num_resultsa = mysql_num_rows($resulta); 
-              for ($i=0; $i <$num_resultsa; $i++) {
-                $rowa=mysql_fetch_array($resulta);  
-                $name=stripslashes($rowa['name']);
-                $resultb = mysql_query("insert into messages values('0','".$name."','System','The item ".stripslashes($row['ItemName'])." is below the minimum stock balance. It is advised you stock the item.','".date('d/m/Y-H:i')."','".date('Ymd')."',0)");
-  
-              }       
-  }
-
-} 
-}
 
 
 //cash above 500,000
@@ -503,29 +474,7 @@ $num_resultsc = mysql_num_rows($resultc);
               }
     }
   }
-  //expenses more than sales
 
-  $todsalesmon=0;
-  $resulta =mysql_query("select SUM(TotalPrice) as amount from sales where Stamp>='".date('Ym')."01' and Stamp<='".date('Ym')."31' and Status!=0 and Bname='".$userbranch."'");
-  $rowa=mysql_fetch_array($resulta);
-  $todsalesmon+=stripslashes($rowa['amount']);
-
-  $todexpenses=0;$todexpmon=0;
-  $result =mysql_query("select * from ledgers where type='Expense' and ledgerid!=644 and ledgerid!=651 order by name");
-  $num_results = mysql_num_rows($result); 
-  for ($i=0; $i <$num_results; $i++) {
-  $row=mysql_fetch_array($result);
-  $lid=stripslashes($row['ledgerid']);
-
-
-  $resulta =mysql_query("select SUM(debit_".$userbranch.") as dr, SUM(credit_".$userbranch.") as cr from ledgerbalances where ledgerid = '".$lid."' and stamp>='".date('Ym')."01'and stamp<='".date('Ym')."31'" );
-  $rowa=mysql_fetch_array($resulta);
-  $cr1=stripslashes($rowa['cr']);
-  $dr1=stripslashes($rowa['dr']);
-  $bal=$dr1-$cr1;
-  $todexpmon+=$bal;
-
-  }
 
 
   if($todexpmon>$todsalesmon){
@@ -623,6 +572,18 @@ while ($row=mysql_fetch_array($result)){
 }
 echo json_encode($data);
 break;
+
+
+
+case 29:
+$data=array();
+$result =mysql_query("select * from inscompanies order by name");
+while ($row=mysql_fetch_array($result)){
+ $data[]=$row;
+}
+echo json_encode($data);
+break;
+
 
 
 

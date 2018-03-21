@@ -24,7 +24,7 @@ $password = $_POST['passwd'];}
 
 
 
-$result = mysql_query("select * from users  where name='".$username."'  and branch='".$userbranch."' and password = sha1('".$password."')");
+$result = mysql_query("select * from users  where name='".$username."' and password = sha1('".$password."')");
 $num_results = mysql_num_rows($result);
 if($num_results>0){
 $_SESSION['database']=$_SESSION['userbranch']=$userbranch;

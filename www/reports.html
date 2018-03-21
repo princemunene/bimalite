@@ -20,23 +20,16 @@
                       <div  id="reportdiv"></div>
                        <div class="custom-accordion accordion-list" id="accdiv">
                                             
-                                               <div class="accordion-item" onclick="todaysales()">
-                                                <div class="accordion-item-toggle">
-                                                 <i class="icon icon-plus">+</i>
-                                                  <span>Today Sales Report</span><br/>
-                                                </div>
-                                                </div>
-                                                
+                                               
 
                                                 <div class="accordion-item">
                                                 <div class="accordion-item-toggle">
                                                   <i class="icon icon-plus">+</i>
                                                   <i class="icon icon-minus">-</i>
-                                                  <span>Sales Reports Over time</span>
-                                                </div>
-                                                <div class="accordion-item-content">
-                                                      
-                                                      <div class="contactform" tabindex="0">
+                                                  <span>Policies Over time</span>
+                                                 </div>
+                                                 <div class="accordion-item-content">
+                                                    <div class="contactform" tabindex="0">
                                                     <div class="form_row">
                                                      <input type="text" value="From" disabled class="form_input"  style="float:left;width:30%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;border:0;border-bottom:1px solid #ccc" />
                                                      <input type="text" id="bfrom"  value="" class="form_input datepicker"  style="float:right;width:60%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;" />
@@ -64,25 +57,18 @@
                                                       </div>
                                                    </div>
 
-                                                    <input type="button" name="submit" class="form_submit" id="submit" style="font-size:20px;padding:10px" value="PULL REPORT" onclick="salesrep(2)"/>
+                                                    <input type="button" name="submit" class="form_submit" id="submit" style="font-size:20px;padding:10px" value="PULL REPORT" onclick="policiesrep(2)"/>
                                                     </div>
 
                                                 </div>
                                               </div>
                                               
-                                               <div class="accordion-item" onclick="todayrefunds()">
-                                                <div class="accordion-item-toggle">
-                                                 <i class="icon icon-plus">+</i>
-                                                  <span>Today Refunds Report</span><br/>
-                                                </div>
-                                                </div>
-                                                
-
+                                               
                                                 <div class="accordion-item">
                                                 <div class="accordion-item-toggle">
                                                   <i class="icon icon-plus">+</i>
                                                   <i class="icon icon-minus">-</i>
-                                                  <span>Refunds Reports Over time</span>
+                                                  <span>Certificates Over time</span>
                                                 </div>
                                                 <div class="accordion-item-content">
                                                       
@@ -121,26 +107,12 @@
                                               </div>
 
 
-                                               <div class="accordion-item" onclick="pricelist()">
-                                                <div class="accordion-item-toggle">
-                                                 <i class="icon icon-plus">+</i>
-                                                  <span>Items Price List Report</span><br/>
-                                                </div>
-                                                </div>
-
-
-                                              <div class="accordion-item" onclick="valuation()">
-                                                <div class="accordion-item-toggle">
-                                                 <i class="icon icon-plus">+</i>
-                                                  <span>Stock Valuation</span><br/>
-                                                </div>
-                                                </div>
 
                                                  <div class="accordion-item">
                                                 <div class="accordion-item-toggle">
                                                   <i class="icon icon-plus">+</i>
                                                   <i class="icon icon-minus">-</i>
-                                                  <span>Stock Tracking Report</span>
+                                                  <span>Policy Expiries Report</span>
                                                 </div>
                                                 <div class="accordion-item-content">
                                                       
@@ -173,6 +145,49 @@
                                                    </div>
 
                                                     <input type="button" name="submit" class="form_submit" id="submit" style="font-size:20px;padding:10px" value="PULL REPORT" onclick="stocktrackrep()"/>
+                                                    </div>
+
+                                                </div>
+                                              </div>
+
+
+                                              <div class="accordion-item">
+                                                <div class="accordion-item-toggle">
+                                                  <i class="icon icon-plus">+</i>
+                                                  <i class="icon icon-minus">-</i>
+                                                  <span>Production Over time</span>
+                                                </div>
+                                                <div class="accordion-item-content">
+                                                      
+                                                      <div class="contactform" tabindex="0">
+                                                    <div class="form_row">
+                                                     <input type="text" value="From" disabled class="form_input"  style="float:left;width:30%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;border:0;border-bottom:1px solid #ccc" />
+                                                     <input type="text" id="from0"  value="" class="form_input datepicker" style="float:right;width:60%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;" />
+                                                    </div>
+                                                    <div style="clear:both;margin-bottom:10px"></div>
+                                                    <div class="form_row">
+                                                     <input type="text" value="To" disabled class="form_input"  style="float:left;width:30%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;border:0;border-bottom:1px solid #ccc" />
+                                                     <input type="text" id="to0"  value="" class="form_input datepicker" style="float:right;width:60%;text-transform:uppercase;padding:10px;font-size:20px;color:#333;" />
+                                                    </div>
+                                                    <div style="clear:both;margin-bottom:10px"></div>
+                                                    <div class="form_row">  
+                                                     <input type="text" value="View All" disabled class="form_input"  style="float:left;width:30%;text-transform:uppercase;padding:10px;font-size:20px;color:#333" />
+                                                     <div class="form_row_right"  style="border:0">        
+                                                      <div class="item-content">
+                                                        <div class="item-inner">
+                                                          <div class="item-title" style="font-size:12px"></div>
+                                                          <div class="item-input">
+                                                            <label class="label-switch" style="float:right">
+                                                              <input type="checkbox" name="viewall0" value="1"  >
+                                                              <div class="checkbox"></div>
+                                                            </label>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+
+                                                    <input type="button" name="submit" class="form_submit" id="submit" style="font-size:20px;padding:10px" value="PULL REPORT" onclick="productrep(2)"/>
                                                     </div>
 
                                                 </div>

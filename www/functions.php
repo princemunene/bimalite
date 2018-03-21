@@ -2,7 +2,7 @@
 function db_fns($branch){
     //$database='qetcoke_'.strtolower($branch);
     //$database='qetcoke_gensystem';
-    $database='bimalite';
+    $database=strtolower($branch);
     $db = mysql_connect('localhost', 'root', 'admin@123+',true) or die(mysql_error());
     //$db = mysql_connect('localhost', 'qetcoke_qet', 'qet@123+',true) or die(mysql_error());
     mysql_select_db($database,$db);
@@ -169,7 +169,7 @@ function postjournal($journalno,$ledger1,$action1,$result1,$ledger2,$action2,$re
     $resultb = mysql_query("select * from ledgers where ledgerid='".$ledger1."'");
     $rowb=mysql_fetch_array($resultb);
     $ledger1bal=stripslashes($rowb['bal']);
-    $branchledger1bal=stripslashes($rowb[$unibcode]);
+    $branchledger1bal=0;
     $ledger1name=stripslashes($rowb['name']);
     if($result1=='Add'){$ledger1bal=$ledger1bal+$amount;$branchledger1bal=$branchledger1bal+$amount;}else{$ledger1bal=$ledger1bal-$amount;$branchledger1bal=$branchledger1bal-$amount;}
     
@@ -177,7 +177,7 @@ function postjournal($journalno,$ledger1,$action1,$result1,$ledger2,$action2,$re
     $resultb = mysql_query("select * from ledgers where ledgerid='".$ledger2."'");
     $rowb=mysql_fetch_array($resultb);
     $ledger2bal=stripslashes($rowb['bal']);
-    $branchledger2bal=stripslashes($rowb[$unibcode]);
+    $branchledger2bal=0;
     $ledger2name=stripslashes($rowb['name']);
     if($result2=='Add'){$ledger2bal=$ledger2bal+$amount;$branchledger2bal=$branchledger2bal+$amount;}else{$ledger2bal=$ledger2bal-$amount;$branchledger2bal=$branchledger2bal-$amount;}
 
@@ -185,8 +185,8 @@ function postjournal($journalno,$ledger1,$action1,$result1,$ledger2,$action2,$re
     $resultx = mysql_query("insert into ledgerentries values('0','".$journalno."','".$action1."','".$ledger1."','".$ledger1name."','".$amount."','".$desc."','".$refno."','".$ledger1bal."','".$date."','".$stamp."',1,'".$unibcode."',0)");  
     $resultx = mysql_query("insert into ledgerentries values('0','".$journalno."','".$action2."','".$ledger2."','".$ledger2name."','".$amount."','".$desc."','".$refno."','".$ledger2bal."','".$date."','".$stamp."',1,'".$unibcode."',0)");  
     
-    $resulty = mysql_query("update ledgers set bal='".$ledger1bal."',".$unibcode."='".$branchledger1bal."' where ledgerid='".$ledger1."'");
-    $resulty = mysql_query("update ledgers set bal='".$ledger2bal."',".$unibcode."='".$branchledger2bal."' where ledgerid='".$ledger2."'");
+    $resulty = mysql_query("update ledgers set bal='".$ledger1bal."' where ledgerid='".$ledger1."'");
+    $resulty = mysql_query("update ledgers set bal='".$ledger2bal."' where ledgerid='".$ledger2."'");
 
     updateledgerbalance($ledger1, $date, $stamp, $action1, $amount, $unibcode);
     updateledgerbalance($ledger2, $date, $stamp, $action2, $amount, $unibcode);
@@ -239,18 +239,18 @@ function updateledgerbalance($lid, $date, $stamp, $txtype, $txamount,$unibcode){
                     $drbal=stripslashes($rowcx['debit']);
                     $crbal=stripslashes($rowcx['credit']);
 
-                    $branchdrbal=stripslashes($rowcx[$unibcode.'_DEBIT']);
-                    $branchcrbal=stripslashes($rowcx[$unibcode.'_CREDIT']);
+                   // $branchdrbal=stripslashes($rowcx[$unibcode.'_DEBIT']);
+                    //$branchcrbal=stripslashes($rowcx[$unibcode.'_CREDIT']);
 
                    
                    if ($txtype == 'Credit'){
                         $crbal += $txamount;
                         $branchcrbal += $txamount;
-                        $resultn = mysql_query("update ledgerbalances set credit='".$crbal."',".$unibcode."_CREDIT='".$branchcrbal."' where ledgerid='".$lid."' and stamp = '".$stamp."'");
+                        $resultn = mysql_query("update ledgerbalances set credit='".$crbal."' where ledgerid='".$lid."' and stamp = '".$stamp."'");
                     } else { //Debit
                         $drbal += $txamount;
                         $branchdrbal += $txamount;
-                        $resultn = mysql_query("update ledgerbalances set debit='".$drbal."',".$unibcode."_DEBIT='".$branchdrbal."' where ledgerid='".$lid."' and stamp = '".$stamp."'");
+                        $resultn = mysql_query("update ledgerbalances set debit='".$drbal."' where ledgerid='".$lid."' and stamp = '".$stamp."'");
                     }
 
                     

@@ -465,7 +465,7 @@ function todaysales(){
 
 }
 
-function salesrep(code){
+function policiesrep(code){
     var a=1;
     var from = $('#bfrom').val();
     var to = $('#bto').val();
@@ -490,6 +490,34 @@ function salesrep(code){
     }
     
 }
+
+
+function productrep(code){
+    var a=1;
+    var from = $('#from0').val();
+    var to = $('#to0').val();
+    var view = $('input[name=viewall0]:checked').val();
+    if(!(view)){view=0}
+    if((from==''||to=='')&&view==0){
+    swal("Error", "Enter both Start and End dates!", "error");
+    }
+    else{
+
+       window.location.hash="#output"; 
+      $('#accdiv').hide();
+
+      $("#reportdiv").html('<img id="img-spinner" src="images/load.gif" style="" alt="Loading"/>');
+      $.ajax({
+      url:'http://'+window.localStorage.getItem('server')+'/report.php?database='+database,
+      data:{id:4,code:2,user:username,d1:from,d2:to},
+      success:function(data){
+      $('#reportdiv').html(data);
+      }
+      }); 
+    }
+    
+}
+
 
 
 
@@ -917,6 +945,8 @@ myApp.onPageInit('dashboard', function (page)  {
 	});
 
 	chart3.render();
+
+
  
 
 })
@@ -1155,6 +1185,48 @@ myApp.onPageInit('certificates', function (page){
 
 })
 
+
+myApp.onPageInit('invoices', function (page){
+ window.location.hash="#invoices";
+ $('#myInput').focus();
+ var param = '';
+ $("#myUL").html('');
+ var array=JSON.parse(window.localStorage.getItem('customers'));
+
+
+ for (var i=0;i<array.length;i++){
+
+           xx='';
+                 Code=pad(array[i]['cusno'],4);
+                 if(i%2==0){xx='background:#fff';}
+                  
+                 $("#myUL").append("<li  onclick='setpolicycode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\")'><a style='"+xx+"'  href='newinvoice.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"<span class='spanprice'>"+array[i]['regn']+"</span></a></li>");
+
+  }
+})
+
+
+
+myApp.onPageInit('receipts', function (page){
+ window.location.hash="#receipts";
+ $('#myInput').focus();
+ var param = '';
+ $("#myUL").html('');
+ var array=JSON.parse(window.localStorage.getItem('customers'));
+
+
+ for (var i=0;i<array.length;i++){
+
+           xx='';
+                 Code=pad(array[i]['cusno'],4);
+                 if(i%2==0){xx='background:#fff';}
+                  
+                 $("#myUL").append("<li  onclick='setpolicycode(\""+array[i]['cusno']+"\",\""+array[i]['mobile']+"\")'><a style='"+xx+"'  href='newreceipt.html'><span class='spancode'>#"+Code+"</span> "+array[i]['name']+"<span class='spanprice'>"+array[i]['regn']+"</span></a></li>");
+
+  }
+})
+
+
 myApp.onPageInit('reminders', function (page){
  window.location.hash="#reminders";
  $('#myInput').focus();
@@ -1235,6 +1307,48 @@ myApp.onPageInit('newcert', function (page){
 
 
 })
+
+myApp.onPageInit('newinvoice', function (page){
+ window.location.hash="#newinvoice";
+  var cusno = window.localStorage.getItem('shopitemcode');
+  $.ajax({
+  url:'http://'+window.localStorage.getItem('server')+'/bridge.php?database='+database,
+  data:{id:12,cusno:cusno},
+  success:function(data){
+  $('#recdiv').html(data);
+   }
+  });
+
+
+})
+
+myApp.onPageInit('newreceipt', function (page){
+ window.location.hash="#newreceipt";
+  var cusno = window.localStorage.getItem('shopitemcode');
+  $.ajax({
+  url:'http://'+window.localStorage.getItem('server')+'/bridge.php?database='+database,
+  data:{id:12,cusno:cusno},
+  success:function(data){
+  $('#recdiv').html(data);
+   }
+  });
+
+  $.ajax({
+      url:"http://"+window.localStorage.getItem('server')+"/bridge.php?id=17&subcat=Bank&database="+database,
+      data:{},
+      success:function(result){
+            
+            result=JSON.parse(result);
+            for (var i=0;i<result.length;i++){
+
+              $("#ledger").append('<option value=' + result[i]['ledgerid'] + '>' + result[i]['name'] + '</option>');
+            }
+
+      }
+      }); 
+
+})
+
 
 
 myApp.onPageInit('refunds', function (page) {
@@ -1531,6 +1645,18 @@ myApp.onPageInit('settings', function (page) {
            
         });
 
+        var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=29&database="+database;
+        $.getJSON(url, function(result) {
+            console.log(result);
+            for (var i=0;i<result.length;i++){
+               $("#selins").append("<option value=\"" + result[i]['id'] + "#" + result[i]['name'] + "#" + result[i]['mobile'] + "#" + result[i]['email'] + "#" + result[i]['commision'] + "\">" + result[i]['name'] + "</option>");
+           
+              
+            }
+           
+        });
+
+
         $("#myrights").append("<li class=\"table_row\"><div class=\"table_section_14\">Description</div><div class=\"table_section_14\">Admin</div> <div class=\"table_section_14\">Manager</div> <div class=\"table_section_14\">Cashier</div></li>");
         var url = "http://"+window.localStorage.getItem('server')+"/bridge.php?id=19&database="+database;
         $.getJSON(url, function(result) {
@@ -1563,6 +1689,7 @@ myApp.onPageInit('settings', function (page) {
         if(rights[110]=='YES'){ $("#atab2").show()}
         if(rights[111]=='YES'){ $("#atab3").show()}
         if(rights[112]=='YES'){ $("#atab4").show()}
+        if(rights[113]=='YES'){ $("#atab6").show()}
        
 
  
@@ -1702,6 +1829,98 @@ var certtype = $('#certtype').val();
         success:function(data){
         $('#recdiv').html(data);
         setTimeout(function() {$('#backtocertificates a')[0].click();}, 1000);
+        }
+        }); 
+        
+        
+      });
+
+
+
+    
+    } 
+}
+
+
+
+function postinvoice(a){
+var cusno = $('#cusno').val();
+var amount = $('#amount').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g,'');
+var description = $('#description').val();
+
+
+    if(cusno==''||amount==''||description==''){
+    swal("Error", "Fill all the required fields!", "error");
+    }
+    
+    
+  else{
+
+
+       swal({
+        title: "Post Invoice Information",
+        text: "Are you sure you want to post this Invoice?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes!",
+        closeOnConfirm: true
+      },
+      function(){
+
+      $("#recdiv").html('<img id="img-spinner" src="images/load.gif" style="" alt="Loading"/>');
+        $.ajax({
+        url:'http://'+window.localStorage.getItem('server')+'/data.php?database='+database,
+        data:{id:21,user:username,a:a,cusno:cusno,amount:amount,description:description},
+        success:function(data){
+        $('#recdiv').html(data);
+        setTimeout(function() {$('#backtoinvoices a')[0].click();}, 1000);
+        }
+        }); 
+        
+        
+      });
+
+
+
+    
+    } 
+}
+
+
+function postreceipt(a){
+var cusno = $('#cusno').val();
+var amount = $('#amount').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g,'');
+var description = $('#description').val();
+var ledger = $('#ledger').val();
+
+
+    if(cusno==''||amount==''||description==''){
+    swal("Error", "Fill all the required fields!", "error");
+    }
+    
+    
+  else{
+
+
+       swal({
+        title: "Post Receipt Information",
+        text: "Are you sure you want to post this Receipt?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes!",
+        closeOnConfirm: true
+      },
+      function(){
+
+      $("#recdiv").html('<img id="img-spinner" src="images/load.gif" style="" alt="Loading"/>');
+        $.ajax({
+        url:'http://'+window.localStorage.getItem('server')+'/data.php?database='+database,
+        data:{id:22,user:username,a:a,cusno:cusno,amount:amount,description:description,ledger:ledger},
+        success:function(data){
+        $('#recdiv').html(data);
+        setTimeout(function() {$('#backtoreceipts a')[0].click();}, 1000);
         }
         }); 
         
@@ -1873,6 +2092,44 @@ function deletecustomer(){
     
     
 }
+
+
+function deleteins(){
+      var insid = $('#insid2').val();
+
+      if(insid==''){
+      swal("Error", "Select Company!", "error");
+      return;
+      }
+
+
+      swal({
+      title: "Delete Company",
+      text: "Are you sure you want to delete this Company?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes!",
+      closeOnConfirm: true
+    },
+    function(){
+
+    $("#saveins2").html('<img id="img-spinner" src="images/load.gif" style="" alt="Loading"/>');
+    $.ajax({
+    url:'http://'+window.localStorage.getItem('server')+'/data.php?database='+database,
+    data:{id:24,user:username,insid:insid},
+    success:function(data){
+    $('#saveins2').html(data);
+    }
+    }); 
+      
+      
+    });
+
+    
+    
+}
+
 
 
 function deleteuser(){
@@ -2857,7 +3114,7 @@ function submitrefund(){
 	}
 }
 
-
+/*
 function postreceipt(){
 	var name=$('#cusname').val();
 	var phone=$('#cusphone').val();
@@ -2923,6 +3180,7 @@ function postreceipt(){
 
 }
 
+*/
 function searchtickets(e){
 		var param = $('#searchtickets').val();
 		var enterKey = 13;
@@ -3012,6 +3270,17 @@ function setpass(){
 	 $('#userpos2').val(parts[3]);
 }
 
+function setins(){
+   var str = $('#selins').val();
+   var parts=str.split('#',5);
+   $('#insid2').val(parts[0]);
+   $('#insname2').val(parts[1]);
+   $('#insphone2').val(parts[2]);
+   $('#insemail2').val(parts[3]);
+   $('#inscomm2').val(parts[4]);
+}
+
+
 
 function edituser(){
 var userid = $('#userid2').val();
@@ -3046,6 +3315,31 @@ if(respass!=1){respass=0}
 		});	
 		}	
 }
+
+
+function addnewins(a){
+var insid = $('#insid'+a).val();
+var insname = $('#insname'+a).val();
+var insphone = $('#insphone'+a).val();
+var insemail = $('#insemail'+a).val();
+var inscomm = $('#inscomm'+a).val();
+
+    if(insid==''||insname==''||insphone==''||insemail==''||insemail==''){
+    swal("Error", "All the fields are required!", "error");
+    }   
+    
+   else{
+    $('#saveins'+a).html('<img id="img-spinner" src="images/load.gif" style="" alt="Loading"/>');
+    $.ajax({
+    url:'http://'+window.localStorage.getItem('server')+'/data.php?database='+database,
+    data:{id:23,insid:insid,insname:insname,a:a,insphone:insphone,insemail:insemail,inscomm:inscomm,username:username},
+    success:function(data){
+    $('#saveins'+a).html(data);
+    }
+    }); 
+    } 
+}
+
 
 
 function savecompany(){
@@ -3140,6 +3434,16 @@ window.addEventListener('popstate', function(event) {
         else if(window.location.href.indexOf('#certificates') >= 0){
           $('#backtocertificates a')[0].click();
         }
+
+        else if(window.location.href.indexOf('#invoices') >= 0){
+          $('#backtoinvoices a')[0].click();
+        }
+
+        else if(window.location.href.indexOf('#receipts') >= 0){
+          $('#backtoreceipts a')[0].click();
+        }
+
+
 
         else if(window.location.href.indexOf('#reminders') >= 0){
           $('#backtoreminders a')[0].click();

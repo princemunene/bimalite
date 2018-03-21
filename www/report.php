@@ -30,27 +30,23 @@ $web=stripslashes($row['Website']);
 $email=stripslashes($row['Email']);
 $logo=stripslashes($row['Logo']);
 
-$result =mysql_query("select * from branchtbl where name='".$userbranch."'");
-$row=mysql_fetch_array($result);
-$comname=stripslashes($row['comname']);
-$tel=stripslashes($row['tel']);
-$Add=stripslashes($row['address']);
 
 
-function loopsales($rowa,$i,$status){
+
+function looppolicies($rowa,$i,$status){
 $aa=$i+1;
 $sent='';
 if($i%2==0){$col='#fff';}else{$col='#f0f0f0';}
-if(stripslashes($rowa['RcptNo'])!=''){$refno='REC-'.stripslashes($rowa['RcptNo']);}else{$refno='INV-'.stripslashes($rowa['InvNo']);}
 echo'<tr style="width:100%; height:20px;padding:0; background:'.$col.'; font-weight:normal  ">';    
 ?>
 <td  style="width:4%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['Date']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $refno ?>-<?php  echo stripslashes($row['Desc']) ?></td>
-<td  style="width:30%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['ItemName']) ?></td>
-<td  style="width:11%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['Qty']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format($rowa['UnitPrice'], 2, ".", "," ) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', $rowa['TotalPrice']), 2, ".", "," ) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['date']) ?></td>
+<td  style="width:20%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['name']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['regn']) ?></td>
+<td  style="width:11%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['mobile']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['start'] ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['end'] ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', $rowa['bal']), 2, ".", "," ) ?></td>
 </tr>
 
 <?php } 
@@ -66,21 +62,21 @@ if(isset($_GET['d1'])){
 if(isset($_GET['d2'])){
   $d2=datereverse($_GET['d2']);
 }else $d2=0;
-$fname='sales_reports';
+$fname='policies_reports';
 
 ?>
 <div  style="width:100%;min-height:260px;">
 <div style="clear:both; margin-bottom:10px;"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px"><?php  echo $comname ?><br/>P.O Box <?php  echo $Add ?><br/>Tel: <?php  echo $tel ?></p><div style="clear:both"></div>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">SALES REPORT
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">POLICIES REPORT
 <br/><strong style="font-size:11px">Date:<?php  echo date('d/m/Y') ?></strong></p>
 <?php if($d1!=0){?>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">From:&nbsp;&nbsp;<?php  echo dateprint($d1) ?>&nbsp;&nbsp;To:&nbsp;<?php  echo dateprint($d2) ?></p>
 <?php } 
  if($code==1){?>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">DAILY SALES REPORT</p>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">DAILY POLICIES REPORT</p>
 <?php } else if($code==2){?>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL SALES REPORT</p>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL POLICIES REPORT</p>
 <?php }  ?>
 <?php $d1=preg_replace('~/~', '', $d1); $d2=preg_replace('~/~', '', $d2);?>
 
@@ -91,11 +87,12 @@ $fname='sales_reports';
 <tr style="width:100%; height:20px;color:#fff; background:#333; padding:0">
         <td  style="width:4%;padding:5px">No.</td>
         <td  style="width:10%;padding:5px">Date</td>
-        <td  style="width:10%;padding:5px">Ref No</td>
-        <td  style="width:30%;padding:5px">Item Name</td>
-        <td  style="width:11%;padding:5px">Qty</td>
-        <td  style="width:10%;padding:5px">Unit Price</td>
-        <td  style="width:15%;padding:5px">Total</td>
+        <td  style="width:20%;padding:5px">Names</td>
+        <td  style="width:10%;padding:5px">Regn</td>
+        <td  style="width:11%;padding:5px">Mobile</td>
+        <td  style="width:10%;padding:5px">From</td>
+        <td  style="width:10%;padding:5px">To</td>
+        <td  style="width:10%;padding:5px">Bal</td>
         
     </tr>
 
@@ -105,7 +102,7 @@ $fname='sales_reports';
   case 1:
 
   
-  $result =mysql_query("select * from sales  where Stamp>='".date('Ymd')."' and Stamp<='".date('Ymd')."' and Type='Sale'  and Bname='".$userbranch."'");
+  $result =mysql_query("select * from customers  where stamp>='".date('Ymd')."' and stamp<='".date('Ymd')."'");
   
 
   break;
@@ -113,11 +110,11 @@ $fname='sales_reports';
    case 2:
   
   if($d1==0){
-  $result =mysql_query("select * from sales where Type='Sale' and Bname='".$userbranch."'");
+  $result =mysql_query("select * from customers");
 
   }
   else{
-  $result =mysql_query("select * from sales  where Stamp>='".$d1."' and Stamp<='".$d2."' and Type='Sale'  and Bname='".$userbranch."'");
+  $result =mysql_query("select * from customers  where stamp>='".$d1."' and stamp<='".$d2."'");
   }
 
   break;
@@ -130,13 +127,9 @@ $fname='sales_reports';
   $num_results = mysql_num_rows($result);
   for ($i=0; $i <$num_results; $i++) {
   $row=mysql_fetch_array($result);
-  $status=stripslashes($row['Status']);
-  $tot+=preg_replace('~,~', '', $row['TotalPrice']);
-  if(stripslashes($row['Lid'])==624){  $mpesa+=preg_replace('~,~', '', $row['TotalPrice']);}
-  if(stripslashes($row['Lid'])==625){  $cash+=preg_replace('~,~', '', $row['TotalPrice']);}
-  if(stripslashes($row['Lid'])==628){  $credit+=preg_replace('~,~', '', $row['TotalPrice']);}
-  if(stripslashes($row['Lid'])==626){  $bank+=preg_replace('~,~', '', $row['TotalPrice']);}
-  loopsales($row,$i,$status);
+  $status=stripslashes($row['status']);
+  $tot+=preg_replace('~,~', '', $row['bal']);
+  looppolicies($row,$i,$status);
   }
 
 
@@ -152,12 +145,7 @@ $fname='sales_reports';
 <div style="clear:both; margin-bottom:0px; border-bottom:1px dashed #333"></div>
 <p style="text-align:left;font-size:11px; font-weight:bold;margin:0 10px 0 10px">General Summary</p>
 <div style="clear:both; margin-bottom:5px; border-bottom:1px dashed #333"></div>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Sales:<?php  echo number_format($tot, 2, ".", "," ) ?></p>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Cash:<?php  echo number_format($cash, 2, ".", "," ) ?><br/>
-Bank:<?php  echo number_format($bank, 2, ".", "," ) ?><br/>
-M-PESA:<?php  echo number_format($mpesa, 2, ".", "," ) ?><br/>
-Credit:<?php  echo number_format($credit, 2, ".", "," ) ?></p>
-
+<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Balance:<?php  echo number_format($tot, 2, ".", "," ) ?></p>
 </div>
 
 <div style="clear:both; margin-bottom:20px"></div>
@@ -169,7 +157,6 @@ Credit:<?php  echo number_format($credit, 2, ".", "," ) ?></p>
 <?php
 
 break;
-
 
 
 case 2:
@@ -184,20 +171,24 @@ $email=stripslashes($row['Email']);
 $logo=stripslashes($row['Logo']);
 
 
-function looprefund($rowa,$i,$status){
+
+
+function loopcertificates($rowa,$i,$status){
 $aa=$i+1;
 $sent='';
 if($i%2==0){$col='#fff';}else{$col='#f0f0f0';}
-if(stripslashes($rowa['RcptNo'])!=''){$refno='REC-'.stripslashes($rowa['RcptNo']);}else{$refno='INV-'.stripslashes($rowa['InvNo']);}
 echo'<tr style="width:100%; height:20px;padding:0; background:'.$col.'; font-weight:normal  ">';    
 ?>
 <td  style="width:4%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['Date']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5pxpadding:5px "><?php  echo $refno ?></td>
-<td  style="width:30%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['ItemName']) ?></td>
-<td  style="width:11%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['Qty']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(abs($rowa['UnitPrice']), 2, ".", "," ) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', abs($rowa['TotalPrice'])), 2, ".", "," ) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['transdate']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['certno'] ?></td>
+<td  style="width:20%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['policyholder']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['regn']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['covertype']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['company']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['policyno']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['commdate'] ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['expiring'] ?></td>
 </tr>
 
 <?php } 
@@ -213,21 +204,21 @@ if(isset($_GET['d1'])){
 if(isset($_GET['d2'])){
   $d2=datereverse($_GET['d2']);
 }else $d2=0;
-$fname='sales_reports';
+$fname='certificates_reports';
 
 ?>
 <div  style="width:100%;min-height:260px;">
 <div style="clear:both; margin-bottom:10px;"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px"><?php  echo $comname ?><br/>P.O Box <?php  echo $Add ?><br/>Tel: <?php  echo $tel ?></p><div style="clear:both"></div>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">REFUNDS/CREDIT NOTE REPORT
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">CERTIFICATES REPORT
 <br/><strong style="font-size:11px">Date:<?php  echo date('d/m/Y') ?></strong></p>
 <?php if($d1!=0){?>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">From:&nbsp;&nbsp;<?php  echo dateprint($d1) ?>&nbsp;&nbsp;To:&nbsp;<?php  echo dateprint($d2) ?></p>
 <?php } 
  if($code==1){?>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">DAILY REFUNDS REPORT</p>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">DAILY CERTIFICATES REPORT</p>
 <?php } else if($code==2){?>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL REFUNDS REPORT</p>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL CERTIFICATES REPORT</p>
 <?php }  ?>
 <?php $d1=preg_replace('~/~', '', $d1); $d2=preg_replace('~/~', '', $d2);?>
 
@@ -238,11 +229,14 @@ $fname='sales_reports';
 <tr style="width:100%; height:20px;color:#fff; background:#333; padding:0">
         <td  style="width:4%;padding:5px">No.</td>
         <td  style="width:10%;padding:5px">Date</td>
-        <td  style="width:10%;padding:5px">Ref No</td>
-        <td  style="width:30%;padding:5px">Item Name</td>
-        <td  style="width:11%;padding:5px">Qty</td>
-        <td  style="width:10%;padding:5px">Unit Price</td>
-        <td  style="width:15%;padding:5px">Total</td>
+        <td  style="width:10%;padding:5px">Cert No</td>
+        <td  style="width:20%;padding:5px">Names</td>
+        <td  style="width:10%;padding:5px">Regn</td>
+        <td  style="width:10%;padding:5px">Cover Type</td>
+        <td  style="width:10%;padding:5px">Company</td>
+        <td  style="width:10%;padding:5px">Policy No</td>
+        <td  style="width:10%;padding:5px">From</td>
+        <td  style="width:10%;padding:5px">To</td>
         
     </tr>
 
@@ -252,19 +246,19 @@ $fname='sales_reports';
   case 1:
 
   
-  $result =mysql_query("select * from sales  where Stamp>='".date('Ymd')."' and Stamp<='".date('Ymd')."' and Type='Credit' and Bname='".$userbranch."'");
+  $result =mysql_query("select * from certificates  where stamp>='".date('Ymd')."' and stamp<='".date('Ymd')."'");
   
 
   break;
 
    case 2:
   
-   if($d1==0){
-  $result =mysql_query("select * from sales where Type='Credit' and Bname='".$userbranch."'");
+  if($d1==0){
+  $result =mysql_query("select * from certificates");
 
   }
   else{
-  $result =mysql_query("select * from sales  where Stamp>='".$d1."' and Stamp<='".$d2."' and  Type='Credit' and Bname='".$userbranch."'");
+  $result =mysql_query("select * from certificates  where stamp>='".$d1."' and stamp<='".$d2."'");
   }
 
   break;
@@ -277,13 +271,8 @@ $fname='sales_reports';
   $num_results = mysql_num_rows($result);
   for ($i=0; $i <$num_results; $i++) {
   $row=mysql_fetch_array($result);
-  $status=stripslashes($row['Status']);
-  $tot+=preg_replace('~,~', '', abs($row['TotalPrice']));
-  if(stripslashes($row['Lid'])==624){  $mpesa+=preg_replace('~,~', '', abs($row['TotalPrice']));}
-  if(stripslashes($row['Lid'])==625){  $cash+=preg_replace('~,~', '', abs($row['TotalPrice']));}
-  if(stripslashes($row['Lid'])==628){  $credit+=preg_replace('~,~', '', abs($row['TotalPrice']));}
-  if(stripslashes($row['Lid'])==626){  $bank+=preg_replace('~,~', '', abs($row['TotalPrice']));}
-  looprefund($row,$i,$status);
+  $status=stripslashes($row['status']);
+  loopcertificates($row,$i,$status);
   }
 
 
@@ -294,18 +283,6 @@ $fname='sales_reports';
 </tbody>
 </table>
 
-<div style="clear:both; margin-bottom:20px"></div>
-<div style="float:left">
-<div style="clear:both; margin-bottom:0px; border-bottom:1px dashed #333"></div>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 10px 0 10px">General Summary</p>
-<div style="clear:both; margin-bottom:5px; border-bottom:1px dashed #333"></div>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Sales:<?php  echo number_format($tot, 2, ".", "," ) ?></p>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Cash:<?php  echo number_format($cash, 2, ".", "," ) ?><br/>
-Bank:<?php  echo number_format($bank, 2, ".", "," ) ?><br/>
-M-PESA:<?php  echo number_format($mpesa, 2, ".", "," ) ?><br/>
-Credit:<?php  echo number_format($credit, 2, ".", "," ) ?></p>
-
-</div>
 
 <div style="clear:both; margin-bottom:20px"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">Thank You for your Partnership.</p>
@@ -316,6 +293,7 @@ Credit:<?php  echo number_format($credit, 2, ".", "," ) ?></p>
 <?php
 
 break;
+
 
 
 
@@ -427,57 +405,111 @@ $email=stripslashes($row['Email']);
 $logo=stripslashes($row['Logo']);
 
 
-function loopitems($rowa,$i,$userbranch){
+
+
+function loopproduction($rowa,$i,$status){
 $aa=$i+1;
 $sent='';
 if($i%2==0){$col='#fff';}else{$col='#f0f0f0';}
-$total=stripslashes($rowa['PurchPrice'])*stripslashes($rowa[$userbranch]);
+if(stripslashes($rowa['drcr'])=='dr'){$refno='INV-'.stripslashes($rowa['rcptno']);}else{$refno='REC-'.stripslashes($rowa['rcptno']);}
 echo'<tr style="width:100%; height:20px;padding:0; background:'.$col.'; font-weight:normal  ">';    
 ?>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
-<td  style="width:45%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['ItemName']) ?></td>
-<td  style="width:15%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['PurchPrice']) ?></td>
-<td  style="width:15%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa[$userbranch]) ?></td>
-<td  style="width:15%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', $total), 2, ".", "," ) ?></td></tr>
+<td  style="width:4%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['date']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $refno ?></td>
+<td  style="width:20%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['name']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['regn']) ?></td>
+<td  style="width:16%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['desc']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['paymode']) ?></td>
+<td  style="width:5%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  if(stripslashes($rowa['drcr'])=='dr'){ echo number_format(preg_replace('~,~', '', $rowa['amount']), 2, ".", "," );} ?></td>
+<td  style="width:5%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  if(stripslashes($rowa['drcr'])=='cr'){echo number_format(preg_replace('~,~', '', $rowa['amount']), 2, ".", "," );} ?></td>
+<td  style="width:5%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', $rowa['bal']), 2, ".", "," ) ?></td>
+</tr>
 
 <?php } 
 
 $date=date('Y/m/d');
+if(isset($_GET['name'])){
+  $name=$_GET['name'];
+}else {$name=0;}
 $code=$_GET['code'];
-$fname='items_price_list_report';
-
+if(isset($_GET['d1'])){
+  $d1=datereverse($_GET['d1']);
+}else $d1=0;
+if(isset($_GET['d2'])){
+  $d2=datereverse($_GET['d2']);
+}else $d2=0;
+$fname='production_reports';
 
 ?>
 <div  style="width:100%;min-height:260px;">
 <div style="clear:both; margin-bottom:10px;"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px"><?php  echo $comname ?><br/>P.O Box <?php  echo $Add ?><br/>Tel: <?php  echo $tel ?></p><div style="clear:both"></div>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">STOCK VALUATION REPORT
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">PRODUCTION REPORT
 <br/><strong style="font-size:11px">Date:<?php  echo date('d/m/Y') ?></strong></p>
-
+<?php if($d1!=0){?>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">From:&nbsp;&nbsp;<?php  echo dateprint($d1) ?>&nbsp;&nbsp;To:&nbsp;<?php  echo dateprint($d2) ?></p>
+<?php } 
+ if($code==1){?>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">DAILY PRODUCTION REPORT</p>
+<?php } else if($code==2){?>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL PRODUCTION REPORT</p>
+<?php }  ?>
+<?php $d1=preg_replace('~/~', '', $d1); $d2=preg_replace('~/~', '', $d2);?>
 
 <div style="clear:both; margin-bottom:10px"></div>
 
 <table id="datatable"  style="width:100%;text-align:center;font-weight:bold; padding:0;margin:0 1%" >
 <tbody>
 <tr style="width:100%; height:20px;color:#fff; background:#333; padding:0">
-        <td  style="width:10%;padding:5px">No.</td>
-        <td  style="width:45%;padding:5px">Item Name</td>
-        <td  style="width:15%;padding:5px">Purchase Price</td>
-        <td  style="width:15%;padding:5px">Balance</td>
-        <td  style="width:15%;padding:5px">Total</td>
+        <td  style="width:4%;padding:5px">No.</td>
+        <td  style="width:10%;padding:5px">Date</td>
+        <td  style="width:10%;padding:5px">Ref No</td>
+        <td  style="width:20%;padding:5px">Names</td>
+        <td  style="width:10%;padding:5px">Regn</td>
+        <td  style="width:16%;padding:5px">Description</td>
+        <td  style="width:10%;padding:5px">Pay Mode</td>
+        <td  style="width:5%;padding:5px">Invoice</td>
+        <td  style="width:5%;padding:5px">Receipt</td>
+        <td  style="width:5%;padding:5px">Bal</td>
         
     </tr>
 
 
 <?php
+  switch($code){
+  case 1:
 
-  $result =mysql_query("select * from items order by ItemName");
-  $tot=0;
+  
+  $result =mysql_query("select * from receipts  where stamp>='".date('Ymd')."' and stamp<='".date('Ymd')."'");
+  
+
+  break;
+
+   case 2:
+  
+  if($d1==0){
+  $result =mysql_query("select * from receipts");
+
+  }
+  else{
+  $result =mysql_query("select * from receipts  where stamp>='".$d1."' and stamp<='".$d2."'");
+  }
+
+  break;
+
+  }
+  
+ 
+
+  $tot=0;$cash=$mpesa=$bank=$credit=0;$inv=$rec=0;
   $num_results = mysql_num_rows($result);
   for ($i=0; $i <$num_results; $i++) {
   $row=mysql_fetch_array($result);
-  $tot+=stripslashes($row['PurchPrice'])*stripslashes($row[$userbranch]);
-  loopitems($row,$i,$userbranch);
+  $status=stripslashes($row['status']);
+  if(stripslashes($row['drcr'])=='dr'){ $inv+=preg_replace('~,~', '', $row['amount']);}else{ $rec+=preg_replace('~,~', '', $row['amount']);}
+ 
+  loopproduction($row,$i,$status);
   }
 
 
@@ -493,9 +525,8 @@ $fname='items_price_list_report';
 <div style="clear:both; margin-bottom:0px; border-bottom:1px dashed #333"></div>
 <p style="text-align:left;font-size:11px; font-weight:bold;margin:0 10px 0 10px">General Summary</p>
 <div style="clear:both; margin-bottom:5px; border-bottom:1px dashed #333"></div>
-<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Valuation:<?php  echo number_format($tot, 2, ".", "," ) ?></p>
-
-
+<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Invoices:<?php  echo number_format($inv, 2, ".", "," ) ?></p>
+<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Receipts:<?php  echo number_format($rec, 2, ".", "," ) ?></p>
 </div>
 
 <div style="clear:both; margin-bottom:20px"></div>
@@ -521,41 +552,52 @@ $email=stripslashes($row['Email']);
 $logo=stripslashes($row['Logo']);
 
 
-function loopstock($rowa,$i){
+
+
+function loopreminders($rowa,$i,$status){
 $aa=$i+1;
 $sent='';
 if($i%2==0){$col='#fff';}else{$col='#f0f0f0';}
 echo'<tr style="width:100%; height:20px;padding:0; background:'.$col.'; font-weight:normal  ">';    
 ?>
-<td  style="width:5%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['Date']) ?></td>
-<td  style="width:25%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['ItemName']) ?></td>
-<td  style="width:40%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['Description']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['Qty']) ?></td>
-<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['Bal']) ?></td>
+<td  style="width:4%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $aa ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo dateprint($rowa['date']) ?></td>
+<td  style="width:20%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['name']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['regn']) ?></td>
+<td  style="width:11%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo stripslashes($rowa['mobile']) ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['start'] ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo $rowa['end'] ?></td>
+<td  style="width:10%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px "><?php  echo number_format(preg_replace('~,~', '', $rowa['bal']), 2, ".", "," ) ?></td>
+</tr>
+
 <?php } 
 
 $date=date('Y/m/d');
+if(isset($_GET['name'])){
+  $name=$_GET['name'];
+}else {$name=0;}
 $code=$_GET['code'];
-$fname='stock_track_report';
 if(isset($_GET['d1'])){
   $d1=datereverse($_GET['d1']);
 }else $d1=0;
 if(isset($_GET['d2'])){
   $d2=datereverse($_GET['d2']);
 }else $d2=0;
+$fname='policies_expiry_reports';
 
 ?>
 <div  style="width:100%;min-height:260px;">
 <div style="clear:both; margin-bottom:10px;"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px"><?php  echo $comname ?><br/>P.O Box <?php  echo $Add ?><br/>Tel: <?php  echo $tel ?></p><div style="clear:both"></div>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">STOCK TRACKING REPORT
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">POLICY EXPIRIES REPORT
 <br/><strong style="font-size:11px">Date:<?php  echo date('d/m/Y') ?></strong></p>
 <?php if($d1!=0){?>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">From:&nbsp;&nbsp;<?php  echo dateprint($d1) ?>&nbsp;&nbsp;To:&nbsp;<?php  echo dateprint($d2) ?></p>
 <?php } 
-else if($code==2){?>
-<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">ALL STOCK TRACK REPORT</p>
+ if($code==1){?>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">POLICY EXPIRIES REPORT</p>
+<?php } else if($code==2){?>
+<p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">POLICY EXPIRIES REPORT</p>
 <?php }  ?>
 <?php $d1=preg_replace('~/~', '', $d1); $d2=preg_replace('~/~', '', $d2);?>
 
@@ -564,29 +606,36 @@ else if($code==2){?>
 <table id="datatable"  style="width:100%;text-align:center;font-weight:bold; padding:0;margin:0 1%" >
 <tbody>
 <tr style="width:100%; height:20px;color:#fff; background:#333; padding:0">
-        <td  style="width:5%;padding:5px">No.</td>
+        <td  style="width:4%;padding:5px">No.</td>
         <td  style="width:10%;padding:5px">Date</td>
-        <td  style="width:25%;padding:5px">Item Name</td>
-        <td  style="width:40%;padding:5px">Description</td>
-        <td  style="width:10%;padding:5px">Qty</td>
+        <td  style="width:20%;padding:5px">Names</td>
+        <td  style="width:10%;padding:5px">Regn</td>
+        <td  style="width:11%;padding:5px">Mobile</td>
+        <td  style="width:10%;padding:5px">From</td>
+        <td  style="width:10%;padding:5px">To</td>
         <td  style="width:10%;padding:5px">Bal</td>
         
     </tr>
 
 
 <?php
-
+ 
   if($d1==0){
-  $result =mysql_query("select * from stocktrack where Dept='".$userbranch."'");
+  $result =mysql_query("select * from customers WHERE stampexp>='".date('Ymd')."'");
 
   }
   else{
-  $result =mysql_query("select * from stocktrack  where Stamp>='".$d1."' and Stamp<='".$d2."'  and Dept='".$userbranch."'");
+
+  $result =mysql_query("select * from customers  where stampexp>='".$d1."' and stampexp<='".$d2."'");
   }
+
+  $tot=0;$cash=$mpesa=$bank=$credit=0;
   $num_results = mysql_num_rows($result);
   for ($i=0; $i <$num_results; $i++) {
   $row=mysql_fetch_array($result);
-  loopstock($row,$i);
+  $status=stripslashes($row['status']);
+  $tot+=preg_replace('~,~', '', $row['bal']);
+  loopreminders($row,$i,$status);
   }
 
 
@@ -597,7 +646,13 @@ else if($code==2){?>
 </tbody>
 </table>
 
-
+<div style="clear:both; margin-bottom:20px"></div>
+<div style="float:left">
+<div style="clear:both; margin-bottom:0px; border-bottom:1px dashed #333"></div>
+<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 10px 0 10px">General Summary</p>
+<div style="clear:both; margin-bottom:5px; border-bottom:1px dashed #333"></div>
+<p style="text-align:left;font-size:11px; font-weight:bold;margin:0 0 0 10px">Total Balance:<?php  echo number_format($tot, 2, ".", "," ) ?></p>
+</div>
 
 <div style="clear:both; margin-bottom:20px"></div>
 <p style="text-align:center;font-size:11px; font-weight:bold;margin:0 0 0 0px">Thank You for your Partnership.</p>
@@ -608,8 +663,6 @@ else if($code==2){?>
 <?php
 
 break;
-
-
 
 case 6:
 $result =mysql_query("select * from company");
@@ -1440,7 +1493,7 @@ if(isset($_GET['d2'])){
 
 
 <?php
- if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype=$name.'_DEBIT';$credtype=$name.'_CREDIT';}
+ if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype='debit';$credtype='credit';}
 
   $arr=array(array());
   $result =mysql_query("select * from ledgers  order by name");
@@ -1587,7 +1640,7 @@ if(isset($_GET['d2'])){
 
 
 <?php
-if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype=$name.'_DEBIT';$credtype=$name.'_CREDIT';}
+if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype='debit';$credtype='credit';}
 $arr=array(array());
 $result =mysql_query("select * from ledgers  order by type, name");
 $num_results = mysql_num_rows($result); 
@@ -1752,7 +1805,7 @@ if(isset($_GET['d2'])){
     <td style="width:30%;border-width:0.5px; border-color:#666; border-style:solid;padding:5px">Kshs.</td>
    </tr>
 <?php
-if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype=$name.'_DEBIT';$credtype=$name.'_CREDIT';}
+if($name=='All'){$debtype='debit';$credtype='credit';}else{$debtype='debit';$credtype='credit';}
   $arr=array(array());
   $result =mysql_query("select * from ledgers order by name");
   $num_results = mysql_num_rows($result); 
